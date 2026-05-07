@@ -6,11 +6,10 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "postbuild": "node scripts/fix-pages-wrangler.mjs",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
-    "deploy": "npm run build && npx wrangler deploy --config dist/server/wrangler.json",
-    "deploy:preview": "npm run build && npx wrangler dev --config dist/server/wrangler.json",
+    "deploy": "npm run build && npx wrangler deploy",
+    "deploy:preview": "npm run build && npx wrangler dev",
     "lint": "eslint .",
     "format": "prettier --write ."
   },

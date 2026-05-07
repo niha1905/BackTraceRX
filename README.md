@@ -358,10 +358,10 @@ npm run deploy
 This runs:
 
 ```bash
-npm run build && npx wrangler deploy --config dist/server/wrangler.json
+npm run build && npx wrangler deploy
 ```
 
-The generated Cloudflare config points to:
+The Cloudflare Vite plugin generates the deploy config at:
 
 ```text
 dist/server/wrangler.json
@@ -414,7 +414,7 @@ npm install
 npm run deploy
 ```
 
-If using a dashboard-based platform, make sure it supports server routes. A static-only deployment will not run the backend API.
+If using Cloudflare dashboard builds, set the deploy command to `npx wrangler deploy` and deploy as a Workers project. A Pages/static-only deployment will not run the backend API.
 
 For Vercel or Netlify, verify TanStack Start server functions are supported by your selected adapter before submitting.
 

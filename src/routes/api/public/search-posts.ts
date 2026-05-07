@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 
 const Schema = z.object({
@@ -16,6 +16,19 @@ const Schema = z.object({
   offset: z.coerce.number().int().min(0).max(10000).optional().default(0),
 });
 
+function getSearchClient() {
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !key) return null;
+
+  return createClient(url, key, {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+    },
+  });
+}
+
 export const Route = createFileRoute("/api/public/search-posts")({
   server: {
     handlers: {
@@ -26,8 +39,16 @@ export const Route = createFileRoute("/api/public/search-posts")({
           return Response.json({ error: parsed.error.flatten() }, { status: 400 });
         }
         const { q, source, drug, symptom, minRisk, minTrust, sort, order, limit, offset } = parsed.data;
+        const supabase = getSearchClient();
 
-        let query = supabaseAdmin
+        if (!supabase) {
+          return Response.json(
+            { posts: [], total: 0, limit, offset, warning: "Supabase search is not configured." },
+            { headers: { "Cache-Control": "no-store" } },
+          );
+        }
+
+        let query = supabase
           .from("signal_posts")
           .select("*", { count: "exact" })
           .gte("risk", minRisk)

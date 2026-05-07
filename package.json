@@ -8,6 +8,8 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
+    "deploy": "npm run build && npx wrangler deploy --config dist/server/wrangler.json",
+    "deploy:preview": "npm run build && npx wrangler dev --config dist/server/wrangler.json",
     "lint": "eslint .",
     "format": "prettier --write ."
   },

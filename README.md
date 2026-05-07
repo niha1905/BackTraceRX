@@ -328,7 +328,95 @@ Run linting:
 npm run lint
 ```
 
-6. Add the same Supabase environment variables in the hosting dashboard.
+## Deployment
+
+Recommended free deployment target:
+
+- Cloudflare Workers
+
+Other good free options:
+
+- Vercel
+- Netlify
+
+Important: this is a full-stack app with server routes. Do not deploy only `dist/client`, because API routes like `/api/public/projects`, `/api/public/live-feed`, and `/api/public/demo-flow` need the generated Worker bundle.
+
+### Cloudflare Workers Full-Stack Deploy
+
+Build the app:
+
+```bash
+npm run build
+```
+
+Deploy the generated Worker:
+
+```bash
+npm run deploy
+```
+
+This runs:
+
+```bash
+npm run build && npx wrangler deploy --config dist/server/wrangler.json
+```
+
+The generated Cloudflare config points to:
+
+```text
+dist/server/wrangler.json
+```
+
+That Worker config serves both:
+
+- Static frontend assets from `dist/client`
+- Server/API functionality from `dist/server`
+
+### First-Time Cloudflare Setup
+
+Login to Cloudflare:
+
+```bash
+npx wrangler login
+```
+
+Set production secrets:
+
+```bash
+npx wrangler secret put SUPABASE_URL
+npx wrangler secret put SUPABASE_PUBLISHABLE_KEY
+npx wrangler secret put VITE_SUPABASE_URL
+npx wrangler secret put VITE_SUPABASE_PUBLISHABLE_KEY
+```
+
+Optional private server-side key:
+
+```bash
+npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+```
+
+For this project, `SUPABASE_SERVICE_ROLE_KEY` is optional because project CRUD, live-feed persistence, and indexed search can use the publishable key when RLS policies are configured.
+
+### Local Cloudflare Preview
+
+Preview the production Worker locally:
+
+```bash
+npm run deploy:preview
+```
+
+### GitHub Deployment
+
+For the most reliable hackathon deployment, use Cloudflare Workers deploy from your terminal after pushing to GitHub:
+
+```bash
+npm install
+npm run deploy
+```
+
+If using a dashboard-based platform, make sure it supports server routes. A static-only deployment will not run the backend API.
+
+For Vercel or Netlify, verify TanStack Start server functions are supported by your selected adapter before submitting.
 
 ## API Routes
 
@@ -359,3 +447,4 @@ Monitoring Project
 ## License
 
 This project was built for hackathon demonstration and educational use.
+

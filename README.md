@@ -328,42 +328,6 @@ Run linting:
 npm run lint
 ```
 
-## Deployment
-
-Recommended free deployment target:
-
-- Cloudflare Pages / Workers
-
-Other good free options:
-
-- Vercel
-- Netlify
-
-For Cloudflare, the project already includes Cloudflare-related config. A typical flow is:
-
-```bash
-npm run build
-```
-
-Then deploy using Cloudflare's dashboard or CLI based on your selected adapter output.
-
-For a simple GitHub-connected deployment:
-
-1. Push this repository to GitHub.
-2. Create a new Cloudflare Pages project.
-3. Connect the GitHub repo.
-4. Use this build command:
-
-```bash
-npm run build
-```
-
-5. Set the output directory according to your hosting adapter, commonly:
-
-```text
-dist/client
-```
-
 6. Add the same Supabase environment variables in the hosting dashboard.
 
 ## API Routes
@@ -392,60 +356,6 @@ Monitoring Project
   -> Semantic Graph
   -> Dashboard, Live Feed, Insights, Export
 ```
-
-## Judging Highlights
-
-BackTraceRx is strong for a hackathon because it demonstrates:
-
-- A clear real-world healthcare safety use case
-- Full-stack implementation, not just a UI mockup
-- Explainable AI-style scoring without hiding logic
-- Real-time streaming behavior
-- Interactive graph intelligence
-- Source-backed evidence traceability
-- Production-aware persistence through Supabase
-- Clean professional UI suitable for judges and stakeholders
-
-## Known Limitations
-
-This is a hackathon implementation, so some production integrations are intentionally adapter-based:
-
-- Crawlers are structured as pluggable adapters and can be replaced with production Firecrawl, Reddit, X, Quora, or forum integrations.
-- MongoDB and Neo4j are represented through storage adapters and can be connected with real credentials.
-- Supabase project persistence is implemented, but the database tables must exist before the app can save projects durably.
-
-## Troubleshooting
-
-### Project saves, then disappears
-
-Run the `monitoring_projects` SQL in Supabase. If the table is missing, the app falls back to memory mode.
-
-### Error: `Could not find the table public.monitoring_projects`
-
-The Supabase table has not been created yet. Run the Supabase setup SQL above.
-
-### Supabase requests fail in production
-
-Check that all environment variables are set in the deployment platform:
-
-```text
-SUPABASE_URL
-SUPABASE_PUBLISHABLE_KEY
-VITE_SUPABASE_URL
-VITE_SUPABASE_PUBLISHABLE_KEY
-```
-
-### Build fails after changing dependencies
-
-Delete local generated folders and reinstall:
-
-```bash
-npm install
-npm run build
-```
-
-Do not commit `node_modules`, `dist`, `.tanstack`, `.wrangler`, or log files.
-
 ## License
 
 This project was built for hackathon demonstration and educational use.
